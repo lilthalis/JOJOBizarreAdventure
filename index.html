@@ -1,537 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JoJo's Bizarre Adventure | Legacy Archive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #050505;
-            --text-main: #e0e0e0;
-            --text-muted: #888888;
-            --accent-silver: #c0c0c0;
-            --accent-gold: #d4af37;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #050505 70%);
-        }
-
-        h1, h2, h3, h4, .cinzel {
-            font-family: 'Cinzel', serif;
-            font-weight: 400;
-            letter-spacing: 2px;
-        }
-
-        /* --- Scroll Animations --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: var(--transition);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- Glassmorphism --- */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 2.5rem;
-            transition: var(--transition);
-        }
-        .glass:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-stars {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="1" fill="white" opacity="0.3"/><circle cx="150" cy="80" r="1.5" fill="white" opacity="0.2"/><circle cx="80" cy="180" r="1" fill="white" opacity="0.4"/></svg>') repeat;
-            animation: drift 100s linear infinite;
-            z-index: 0;
-        }
-
-        @keyframes drift {
-            from { background-position: 0 0; }
-            to { background-position: -1000px 1000px; }
-        }
-
-        .hero-content {
-            z-index: 1;
-            padding: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 4vw;
-            letter-spacing: 0.5em;
-            text-transform: uppercase;
-            background: linear-gradient(to right, #fff, var(--accent-silver), #555);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .hero h2 {
-            font-size: 1.5vw;
-            color: var(--accent-silver);
-            margin-bottom: 2rem;
-            letter-spacing: 0.3em;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            font-style: italic;
-            letter-spacing: 1px;
-        }
-
-        /* --- SECTIONS --- */
-        .section-container {
-            padding: 8rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 5rem;
-        }
-
-        .section-header h2 {
-            font-size: 3rem;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-        }
-
-        /* --- CHARACTER GRID --- */
-        .character-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-        }
-
-        .character-card {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .char-portrait {
-            height: 250px;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        /* Visual Atmosphere Gradients */
-        .bg-giorno { background: linear-gradient(135deg, #2a2200, #d4af37); }
-        .bg-johnny { background: linear-gradient(135deg, #001f3f, #3a7bd5); }
-        .bg-jodio { background: linear-gradient(135deg, #0a0a0a, #4a4e69); }
-        .bg-josuke4 { background: linear-gradient(135deg, #2c003e, #9d50bb); }
-        .bg-josuke8 { background: linear-gradient(135deg, #141e30, #c0c0c0); }
-        
-        .bg-dio { background: linear-gradient(135deg, #000000, #b8860b); }
-        .bg-diavolo { background: linear-gradient(135deg, #3e0000, #ff0000); }
-        .bg-kira { background: linear-gradient(135deg, #e6e6ea, #707070); }
-        .bg-diego { background: linear-gradient(135deg, #002b11, #228b22); }
-        .bg-valentine { background: linear-gradient(135deg, #001f3f, #b22222); }
-
-        .char-title {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-
-        .char-theme {
-            color: var(--accent-gold);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 1.5rem;
-        }
-
-        .char-topics {
-            list-style: none;
-            margin-bottom: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .char-topics li::before {
-            content: '• ';
-            color: var(--accent-silver);
-        }
-
-        .char-quote {
-            font-style: italic;
-            color: var(--accent-silver);
-            border-left: 2px solid var(--accent-gold);
-            padding-left: 1rem;
-            margin-top: auto;
-        }
-
-        /* --- STANDS SECTION --- */
-        .stands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .stand-card {
-            text-align: center;
-            padding: 2rem;
-            border-radius: 12px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%);
-            border-top: 1px solid var(--glass-border);
-            transition: var(--transition);
-        }
-
-        .stand-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .stand-name {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent-gold);
-        }
-
-        .stand-stats {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-        }
-
-        /* --- THEMES SECTION --- */
-        .themes-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-
-        .theme-pill {
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            border: 1px solid var(--accent-silver);
-            color: var(--text-main);
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            background: transparent;
-            transition: var(--transition);
-        }
-
-        .theme-pill:hover {
-            background: var(--text-main);
-            color: var(--bg-color);
-        }
-
-        /* --- FINAL SECTION --- */
-        .final-section {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .final-text {
-            z-index: 2;
-        }
-
-        .final-text h2 {
-            font-size: 4vw;
-            color: #fff;
-            line-height: 1.4;
-            opacity: 0.9;
-        }
-
-        .birthmark {
-            position: absolute;
-            font-size: 20vw;
-            color: var(--accent-gold);
-            opacity: 0.03;
-            z-index: 1;
-            transform: rotate(-15deg);
-        }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOJO'S BIZARRE ARCHIVE — Interactive Digital Experience</title>
+  <meta name="description" content="A luxury Speedwagon Foundation archive inspired by JoJo's Bizarre Adventure." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="cursor-orb" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="rain-field" aria-hidden="true"></div>
+  <div class="time-clock" aria-live="polite">TIME STOP</div>
 
-    <section class="hero">
-        <div class="hero-stars"></div>
-        <div class="hero-content reveal">
-            <h1>JoJo's Bizarre Adventure</h1>
-            <h2>Heroes, Villains and Legacies</h2>
-            <p>"Every generation leaves behind a will that can never be erased."</p>
-        </div>
+  <nav class="archive-nav" aria-label="Archive navigation">
+    <a href="#intro">Archive</a><a href="#wheel">Wheel</a><a href="#heroes">Heroes</a><a href="#villains">Villains</a><a href="#ending">Ending</a>
+  </nav>
+
+  <main id="app">
+    <section id="intro" class="hero panel-section">
+      <div class="wing left-wing"></div><div class="wing right-wing"></div>
+      <div class="birthmark" aria-hidden="true">✦</div>
+      <p class="eyebrow narrator">Speedwagon Foundation / Confidential Exhibit</p>
+      <h1>JOJO'S BIZARRE ARCHIVE</h1>
+      <p class="subtitle">Heroes. Villains. Destiny.</p>
+      <p class="intro-copy">The vault opens in silence. Stars move like witnesses. Bloodlines, stands, curses, and miracles are catalogued as living artifacts.</p>
+      <a class="cta" href="#wheel">Open the Archive</a>
     </section>
 
-    <section class="section-container" id="joestars">
-        <div class="section-header reveal">
-            <h2>The Joestars</h2>
-            <p class="cinzel" style="color: var(--text-muted)">The Golden Bloodline</p>
-        </div>
-
-        <div class="character-grid">
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-giorno"></div>
-                <h3 class="char-title cinzel">Giorno Giovanna</h3>
-                <p class="char-theme">Dreams and Justice</p>
-                <ul class="char-topics">
-                    <li>Son of Dio</li>
-                    <li>Golden Wind</li>
-                    <li>Desire to reform the mafia</li>
-                    <li>Leadership & Growth</li>
-                </ul>
-                <p class="char-quote">"I, Giorno Giovanna, have a dream."</p>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-johnny"></div>
-                <h3 class="char-title cinzel">Johnny Joestar</h3>
-                <p class="char-theme">Rebirth and Determination</p>
-                <ul class="char-topics">
-                    <li>Former jockey battling paralysis</li>
-                    <li>Search for purpose</li>
-                    <li>Evolution throughout Steel Ball Run</li>
-                    <li>Tusk Act 1 to Act 4</li>
-                </ul>
-                <p class="char-quote">"It's been a roundabout path... but this is the only way."</p>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-jodio"></div>
-                <h3 class="char-title cinzel">Jodio Joestar</h3>
-                <p class="char-theme">Ambition and Survival</p>
-                <ul class="char-topics">
-                    <li>Modern JoJo protagonist</li>
-                    <li>Criminal lifestyle</li>
-                    <li>Intelligence & Adaptability</li>
-                    <li>November Rain</li>
-                </ul>
-                <p class="char-quote">"This is a story about me getting filthy rich."</p>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-josuke4"></div>
-                <h3 class="char-title cinzel">Josuke Higashikata (Part 4)</h3>
-                <p class="char-theme">Kindness and Protection</p>
-                <ul class="char-topics">
-                    <li>Protector of Morioh</li>
-                    <li>Friendship & Family</li>
-                    <li>Crazy Diamond</li>
-                </ul>
-                <p class="char-quote">"I'll protect this town and my mother."</p>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-josuke8"></div>
-                <h3 class="char-title cinzel">Josuke Higashikata (Part 8)</h3>
-                <p class="char-theme">Identity and Mystery</p>
-                <ul class="char-topics">
-                    <li>Memory loss</li>
-                    <li>Search for self & the Higashikata family</li>
-                    <li>Soft & Wet</li>
-                </ul>
-                <p class="char-quote">"Who am I? Where do I belong?"</p>
-            </div>
-        </div>
+    <section id="wheel" class="wheel-section panel-section">
+      <header class="section-title"><span>Gucci-inspired character wheel</span><h2>Orbit of Fate</h2><p>Hover the orbit. Click any archive seal to summon its presence.</p></header>
+      <div class="character-wheel" aria-label="Rotating character gallery">
+        <div class="wheel-core">JO★JO<br><small>Archive</small></div>
+      </div>
     </section>
 
-    <section class="section-container" id="villains">
-        <div class="section-header reveal">
-            <h2 style="color: #b22222;">The Villains</h2>
-            <p class="cinzel" style="color: var(--text-muted)">Architects of Chaos</p>
-        </div>
-
-        <div class="character-grid">
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-dio"></div>
-                <h3 class="char-title cinzel">Dio Brando</h3>
-                <p class="char-theme" style="color:#b8860b">Power and Immortality</p>
-                <ul class="char-topics">
-                    <li>Phantom Blood & Stardust Crusaders</li>
-                    <li>The World</li>
-                    <li>Ambition without limits</li>
-                </ul>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-diavolo"></div>
-                <h3 class="char-title cinzel">Diavolo</h3>
-                <p class="char-theme" style="color:#ff4444">Fear and Control</p>
-                <ul class="char-topics">
-                    <li>Hidden identity</li>
-                    <li>King Crimson</li>
-                    <li>Fate manipulation</li>
-                    <li>Obsession with secrecy</li>
-                </ul>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-kira"></div>
-                <h3 class="char-title cinzel" style="color: #222;">Yoshikage Kira</h3>
-                <p class="char-theme" style="color:#555">Normality and Obsession</p>
-                <ul class="char-topics" style="color:#888;">
-                    <li>Desire for a quiet life</li>
-                    <li>Killer Queen</li>
-                    <li>Hidden darkness</li>
-                </ul>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-diego"></div>
-                <h3 class="char-title cinzel">Diego Brando</h3>
-                <p class="char-theme" style="color:#228b22">Competition and Survival</p>
-                <ul class="char-topics">
-                    <li>Rivalry with Johnny</li>
-                    <li>Evolution as a character</li>
-                    <li>Dinosaur powers</li>
-                </ul>
-            </div>
-
-            <div class="character-card glass reveal">
-                <div class="char-portrait bg-valentine"></div>
-                <h3 class="char-title cinzel">Funny Valentine</h3>
-                <p class="char-theme" style="color:#5a8dee">Patriotism and Sacrifice</p>
-                <ul class="char-topics">
-                    <li>President of the United States</li>
-                    <li>D4C</li>
-                    <li>National ideals & Moral ambiguity</li>
-                </ul>
-            </div>
-        </div>
+    <section class="manga-mode panel-section">
+      <header class="section-title"><span>Manga mode</span><h2>Pages That Breathe</h2></header>
+      <div class="manga-grid">
+        <article class="manga-panel large"><h3>Destiny turns like a page.</h3><p class="bubble">ゴゴゴゴ</p></article>
+        <article class="manga-panel"><h3>Stands emerge from negative space.</h3></article>
+        <article class="manga-panel tall"><h3>Every frame has a pulse.</h3><p class="bubble alt">Menacing</p></article>
+      </div>
     </section>
 
-    <section class="section-container" id="stands">
-        <div class="section-header reveal">
-            <h2>Manifestations of the Soul</h2>
-            <p class="cinzel" style="color: var(--text-muted)">Legendary Stands</p>
-        </div>
-
-        <div class="stands-grid">
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">Gold Experience Requiem</h4>
-                <div class="stand-stats"><span>POWER: ?</span> | <span>SPEED: ?</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">Tusk Act 4</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: B</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">Crazy Diamond</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: A</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">Soft & Wet</h4>
-                <div class="stand-stats"><span>POWER: C</span> | <span>SPEED: B</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">The World</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: A</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">King Crimson</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: A</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">Killer Queen</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: B</span></div>
-            </div>
-            <div class="stand-card reveal">
-                <h4 class="stand-name cinzel">D4C</h4>
-                <div class="stand-stats"><span>POWER: A</span> | <span>SPEED: A</span></div>
-            </div>
-        </div>
+    <section id="heroes" class="archive-section panel-section">
+      <header class="section-title"><span>Hero wing</span><h2>Joestar Records</h2><p>Each dossier reacts with its own stand phenomenon.</p></header>
+      <div class="cards" id="heroCards"></div>
     </section>
 
-    <section class="section-container" id="themes">
-        <div class="section-header reveal">
-            <h2>The Philosophy</h2>
-        </div>
-        <div class="themes-container reveal">
-            <div class="theme-pill cinzel">Fate</div>
-            <div class="theme-pill cinzel">Determination</div>
-            <div class="theme-pill cinzel">Legacy</div>
-            <div class="theme-pill cinzel">Family</div>
-            <div class="theme-pill cinzel">Identity</div>
-            <div class="theme-pill cinzel">Dreams</div>
-            <div class="theme-pill cinzel">Sacrifice</div>
-            <div class="theme-pill cinzel">Justice</div>
-        </div>
+    <section id="villains" class="archive-section panel-section villain-wing">
+      <header class="section-title"><span>Restricted villain wing</span><h2>Threat Index</h2><p>Dangerous presences distort the archive itself.</p></header>
+      <div class="cards" id="villainCards"></div>
     </section>
 
-    <section class="final-section">
-        <div class="hero-stars"></div>
-        <div class="birthmark">★</div>
-        <div class="final-text reveal">
-            <h2 class="cinzel">People may disappear.<br><br>Their will never does.</h2>
-        </div>
+    <section id="ending" class="ending panel-section">
+      <div class="wing close-left"></div><div class="wing close-right"></div>
+      <div class="birthmark final" aria-hidden="true">✦</div>
+      <blockquote>“The will of humanity can never be erased.”</blockquote>
+      <p>The stars return. The archive closes. The journey ends.</p>
     </section>
+  </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const reveals = document.querySelectorAll(".reveal");
-
-            const revealOnScroll = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("active");
-                        observer.unobserve(entry.target); // Run once
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: "0px 0px -50px 0px"
-            });
-
-            reveals.forEach(reveal => {
-                revealOnScroll.observe(reveal);
-            });
-        });
-    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
